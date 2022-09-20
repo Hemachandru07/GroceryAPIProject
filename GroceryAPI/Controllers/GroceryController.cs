@@ -14,9 +14,9 @@ namespace GroceryAPI.Controllers
     {
         private readonly GroceryContext db;
 
-        public GroceryController(GroceryContext _db)
+        public GroceryController(GroceryContext db)
         {
-            db = _db;
+            this.db = db;
         }
 
         [HttpGet]
@@ -24,7 +24,7 @@ namespace GroceryAPI.Controllers
         {
             try
             {
-                return Ok(await db.grocery.ToListAsync());
+                return await db.grocery.ToListAsync();
             }
             catch (Exception)
             {
