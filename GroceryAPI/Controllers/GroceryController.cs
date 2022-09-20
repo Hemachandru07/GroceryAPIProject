@@ -63,7 +63,7 @@ namespace GroceryAPI.Controllers
 
                 db.grocery.Add(grocery);
                 await db.SaveChangesAsync();
-                return CreatedAtAction("GetAllGrocery", grocery);
+                return grocery;
             }
             catch (Exception)
             {

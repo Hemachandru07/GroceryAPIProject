@@ -4,6 +4,7 @@ using GroceryAPI.Controllers;
 using GroceryAPI.Data;
 using GroceryAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -81,7 +82,68 @@ namespace GroceryAPI.Tests.Controller
             result.Should().NotBeNull();
             result.Should().BeOfType<ActionResult<Grocery>>();
             result.Value.Should().BeEquivalentTo(grocery);
+        }
 
+        [Fact]
+        public async Task CreateGrocery_Test()
+        {
+            //Arrange
+            var dbContext = await GetDatabaseContext();
+            var groceryController = new GroceryController(dbContext);
+            Grocery grocery = new Grocery()
+            {
+                GroceryID = 1011,
+                GroceryName = "Oil0",
+                Price = 1001,
+                Stock = 1001
+            };
+
+            //Act
+            var result = await groceryController.CreateGrocery(grocery);
+
+            //Assert
+            result.Should().NotBeNull();
+            result.Should().BeOfType<ActionResult<Grocery>>();
+            result.Value.Should().BeEquivalentTo(grocery);
+            dbContext.grocery.Should().HaveCount(11);
+        }
+        [Fact]
+        public async Task EditGrocery_Test()
+        {
+            //Arrange
+            var dbContext = await GetDatabaseContext();
+            var groceryController = new GroceryController(dbContext);
+
+            //Act
+            var oldGrocery = await groceryController.GetGroceryById(1000);
+            var result = oldGrocery.Should().BeOfType<ActionResult<Grocery>>().Subject;
+            var Okresult = result.Value.Should().BeAssignableTo<Grocery>().Subject;
+
+            var grocery = new Grocery();
+            grocery.GroceryName = "Oil10";
+            grocery.Price = Okresult.Price;
+            grocery.Stock = Okresult.Stock;
+
+            var newGrocery = await groceryController.EditGrocery(grocery);
+
+            //Assert
+            newGrocery.Should().NotBeNull();
+            newGrocery.Should().BeOfType<ActionResult<Grocery>>();
+
+        }
+        [Fact]
+        public async Task DeleteGrocery_Test()
+        {
+            //Arrange
+            var dbContext = await GetDatabaseContext();
+            var groceryController = new GroceryController(dbContext);
+            
+            //Act
+            var result = await groceryController.DeleteGrocery(1000);
+
+            //Assert
+            result.Should().BeNull();
+            dbContext.grocery.Should().HaveCount(9);
         }
     }
 }
