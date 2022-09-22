@@ -27,7 +27,7 @@ namespace GroceryAPI.Controllers
         {
             try
             {
-                return Ok(await db.customer.ToListAsync());
+                return await db.customer.ToListAsync();
             }
             catch (Exception)
             {
@@ -39,7 +39,7 @@ namespace GroceryAPI.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register([FromBody] Customer customer)
+        public async Task<ActionResult<Customer>> Register([FromBody] Customer customer)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace GroceryAPI.Controllers
 
                 await db.customer.AddAsync(customer);
                 await db.SaveChangesAsync();
-                return CreatedAtAction("GetAllCustomer", customer);
+                return customer;
             }
             catch (Exception)
             {

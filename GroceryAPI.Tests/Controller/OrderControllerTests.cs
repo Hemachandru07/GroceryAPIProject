@@ -17,8 +17,6 @@ namespace GroceryAPI.Tests.Controller
             var databaseContext = new GroceryContext(options);
             databaseContext.Database.EnsureCreated();
             int id = 10;
-            if (await databaseContext.carts.CountAsync() <= 0)
-            {
                 for (int i = 1; i < 5; i++)
                 {
                     databaseContext.carts.Add(
@@ -54,7 +52,6 @@ namespace GroceryAPI.Tests.Controller
                    
                     await databaseContext.SaveChangesAsync();
                 }
-            }
             return databaseContext;
         }
 
