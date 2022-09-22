@@ -86,6 +86,7 @@ namespace GroceryAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "Error creating new Grocery record");
             }
+            
         }
 
         [HttpDelete]

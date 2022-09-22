@@ -1,16 +1,10 @@
-﻿using FakeItEasy;
-using FluentAssertions;
+﻿using FluentAssertions;
+using FluentAssertions.Equivalency.Tracing;
 using GroceryAPI.Controllers;
 using GroceryAPI.Data;
 using GroceryAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GroceryAPI.Tests.Controller
 {
@@ -113,23 +107,23 @@ namespace GroceryAPI.Tests.Controller
             //Arrange
             var dbContext = await GetDatabaseContext();
             var groceryController = new GroceryController(dbContext);
+            var id = 1000;
+            Grocery grocery = new Grocery()
+            {
+                GroceryID = id,
+                GroceryName = "Oil11",
+                Price = 1001,
+                Stock = 1001
+            };
 
             //Act
-            var oldGrocery = await groceryController.GetGroceryById(1000);
-            var result = oldGrocery.Should().BeOfType<ActionResult<Grocery>>().Subject;
-            var Okresult = result.Value.Should().BeAssignableTo<Grocery>().Subject;
-
-            var grocery = new Grocery();
-            grocery.GroceryName = "Oil10";
-            grocery.Price = Okresult.Price;
-            grocery.Stock = Okresult.Stock;
-
-            var newGrocery = await groceryController.EditGrocery(grocery);
+            var oldGrocery = await dbContext.grocery.FindAsync(id);
+            dbContext.Entry<Grocery>(oldGrocery).State = EntityState.Detached;
+            var result = await groceryController.EditGrocery(grocery);
 
             //Assert
-            newGrocery.Should().NotBeNull();
-            newGrocery.Should().BeOfType<ActionResult<Grocery>>();
-
+            result.Value.Should().BeEquivalentTo(grocery);
+            dbContext.grocery.Should().HaveCount(10);
         }
         [Fact]
         public async Task DeleteGrocery_Test()

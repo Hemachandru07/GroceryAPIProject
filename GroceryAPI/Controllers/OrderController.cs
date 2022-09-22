@@ -22,7 +22,9 @@ namespace GroceryAPI.Controllers
         [Route("GetCartById")]
         public async Task<Cart> GetCartById(int id)
         {
-            var result = await _context.carts.Include(x => x.grocery).Where(x => x.CartID == id).Select(x => x).SingleOrDefaultAsync();
+            var result = await _context.carts.Include(x => x.grocery).Where(x => x.CartID == id).Select(x => x).FirstOrDefaultAsync();
+            //var result await _context.carts.Find
+            //var result = await (from i in _context.carts.Include(x => x.grocery) where i.CartID == id select i).FirstOrDefaultAsync();
             return result;
         }
        
@@ -54,7 +56,7 @@ namespace GroceryAPI.Controllers
             var c = await _context.carts.FindAsync(id);
             _context.carts.Remove(c);
             await _context.SaveChangesAsync();
-            return Ok(c);
+            return null;
         }
 
         [HttpPost]

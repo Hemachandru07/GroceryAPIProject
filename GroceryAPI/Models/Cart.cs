@@ -8,13 +8,13 @@ namespace GroceryAPI.Models
     {
         [Key]
         [Display(Name = "Cart ID")]
-        public int CartID { get; set; }
+        public int? CartID { get; set; }
 
         [Display(Name = "Cart Type ID")]
        
         public string? CartTypeId { get; set; }
        
-        public int GroceryID { get; set; }
+        public int? GroceryID { get; set; }
         [ForeignKey("GroceryID")]
         public virtual Grocery? grocery { get; set; }
         [Required(ErrorMessage = "*")]
@@ -22,7 +22,7 @@ namespace GroceryAPI.Models
         [ForeignKey("CustomerID")]
         public virtual Customer? customer { get; set; }
        
-        public int Quantity { get; set; }
+        public int? Quantity { get; set; }
        
         [Display(Name = "Unit Price")]
         public float? UnitPrice { get; set; }

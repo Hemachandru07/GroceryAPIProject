@@ -12,7 +12,7 @@ namespace GroceryAPI.Models
         public int CustomerID { get; set; }
         [ForeignKey("CustomerID")]
         public virtual Customer? customer { get; set; }
-        public int GroceryID { get; set; }
+        public int? GroceryID { get; set; }
         [ForeignKey("GroceryID")]
         public virtual Grocery? grocery { get; set; }
         public int? Quantity { get; set; }
