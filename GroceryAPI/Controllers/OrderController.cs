@@ -39,14 +39,14 @@ namespace GroceryAPI.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> PutCart(int id, Cart cart)
+        public async Task<ActionResult<Cart>> PutCart(int id, Cart cart)
         {
             var c = await _context.carts.FindAsync(cart.CartID);
             c.Quantity = cart.Quantity;
             c.UnitPrice = c.Quantity * (from i in _context.grocery where i.GroceryID == c.GroceryID select i.Price).SingleOrDefault();
             _context.carts.Update(c);
             await _context.SaveChangesAsync();
-            return Ok(c);
+            return c;
         }
 
       
@@ -87,7 +87,7 @@ namespace GroceryAPI.Controllers
             }
             _context.carts.Add(cart);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetCart", new { id = cart.CartID }, cart);
+            return cart;
 
         }
 
