@@ -12,7 +12,6 @@ namespace GroceryAPI.Controllers
     public class OrderController : ControllerBase
     {
         private readonly GroceryContext _context;
-
         public OrderController(GroceryContext context)
         {
             _context = context;
@@ -23,8 +22,6 @@ namespace GroceryAPI.Controllers
         public async Task<Cart> GetCartById(int id)
         {
             var result = await _context.carts.Include(x => x.grocery).Where(x => x.CartID == id).Select(x => x).FirstOrDefaultAsync();
-            //var result await _context.carts.Find
-            //var result = await (from i in _context.carts.Include(x => x.grocery) where i.CartID == id select i).FirstOrDefaultAsync();
             return result;
         }
        

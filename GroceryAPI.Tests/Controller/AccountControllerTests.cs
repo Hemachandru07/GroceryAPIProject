@@ -8,12 +8,17 @@ using GroceryAPI.Tests.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+
+
 namespace GroceryAPI.Tests.Controller
 {
     public class AccountControllerTests
     {
+        
         private readonly IConfiguration _configuration;
-       
+
+        
+        
         [Fact]
         public async Task AdminLogin_Test()
         {
@@ -67,9 +72,10 @@ namespace GroceryAPI.Tests.Controller
             dbContext.customer.Should().HaveCount(5);
         }
 
-        [Fact]
+        //[Fact]
         public async Task CustomerLogin_Test()
         {
+
             //Arrange
             var inMemory = new InMemoryDbContext();
             var dbContext = await inMemory.GetDatabaseContext();

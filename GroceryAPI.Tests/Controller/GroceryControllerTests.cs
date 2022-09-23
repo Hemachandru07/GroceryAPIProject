@@ -29,7 +29,7 @@ namespace GroceryAPI.Tests.Controller
             
         }
         [Fact]
-        public async Task GetGroceryById_Test()
+        public async Task GetGroceryById_ReturnGrocery()
         {
             //Arrange
             var inMemory = new InMemoryDbContext();
@@ -53,7 +53,24 @@ namespace GroceryAPI.Tests.Controller
         }
 
         [Fact]
-        public async Task CreateGrocery_Test()
+        public async Task GetGroceryById_ReturnNull()
+        {
+            //Arrange
+            var inMemory = new InMemoryDbContext();
+            var dbContext = await inMemory.GetDatabaseContext();
+            var groceryController = new GroceryController(dbContext);
+
+            //Act
+            var result = await groceryController.GetGroceryById(20);
+
+            //Assert
+            result.Value.Should().BeNull();
+            result.Should().BeOfType<ActionResult<Grocery>>();
+
+        }
+
+        [Fact]
+        public async Task CreateGrocery_GroceryAdded()
         {
             //Arrange
             var inMemory = new InMemoryDbContext();
@@ -76,6 +93,7 @@ namespace GroceryAPI.Tests.Controller
             result.Value.Should().BeEquivalentTo(grocery);
             dbContext.grocery.Should().HaveCount(5);
         }
+
         [Fact]
         public async Task EditGrocery_Test()
         {
@@ -101,8 +119,9 @@ namespace GroceryAPI.Tests.Controller
             result.Value.Should().BeEquivalentTo(grocery);
             dbContext.grocery.Should().HaveCount(4);
         }
+
         [Fact]
-        public async Task DeleteGrocery_Test()
+        public async Task DeleteGrocery_DeletedSuccessfully()
         {
             //Arrange
             var inMemory = new InMemoryDbContext();
@@ -115,6 +134,22 @@ namespace GroceryAPI.Tests.Controller
             //Assert
             result.Should().BeNull();
             dbContext.grocery.Should().HaveCount(3);
+        }
+
+        [Fact]
+        public async Task DeleteGrocery_NotDeleted()
+        {
+            //Arrange
+            var inMemory = new InMemoryDbContext();
+            var dbContext = await inMemory.GetDatabaseContext();
+            var groceryController = new GroceryController(dbContext);
+
+            //Act
+            var result = await groceryController.DeleteGrocery(20);
+
+            //Assert
+            result.Result.Should().NotBeNull();
+            dbContext.grocery.Should().HaveCount(4);
         }
     }
 }

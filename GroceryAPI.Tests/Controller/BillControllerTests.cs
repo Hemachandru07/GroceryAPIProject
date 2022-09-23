@@ -73,7 +73,6 @@ namespace GroceryAPI.Tests.Controller
                 CustomerID = 11,
                 CardNumber = 12346,
                 TotalAmount = 10
-                
             };
 
             //Act
