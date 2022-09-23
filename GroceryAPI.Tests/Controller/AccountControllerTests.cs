@@ -4,6 +4,7 @@ using GroceryAPI.Controllers;
 using GroceryAPI.Data;
 using GroceryAPI.Helper;
 using GroceryAPI.Models;
+using GroceryAPI.Tests.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,55 +13,17 @@ namespace GroceryAPI.Tests.Controller
     public class AccountControllerTests
     {
         private readonly IConfiguration _configuration;
-        //public AccountControllerTests(IConfiguration configuration)
-        //{
-        //    _configuration = configuration;
-        //}
-        private async Task<GroceryContext> GetDatabaseContext()
-        {
-            var options = new DbContextOptionsBuilder<GroceryContext>()
-                            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                            .Options;
-            var databaseContext = new GroceryContext(options);
-            databaseContext.Database.EnsureCreated();
-            int id = 10;
-            if (await databaseContext.customer.CountAsync() <= 0)
-            {
-                for (int i = 1; i < 5; i++)
-                {
-                    databaseContext.admin.Add(
-                        new Admin()
-                        {
-                            AdminID = id++,
-                            AdminName = "Admin" + i,
-                            EmailID = "admin" + i + "@gmail.com",
-                            Password = "!Morning1" + i
-                        });
-                    databaseContext.customer.Add(
-                       new Customer()
-                       {
-                           CustomerID = id,
-                           CustomerName = "Chandru" + i,
-                           CustomerEmail = "Chandru" + i + "@gmail.com",
-                           MobileNumber = 985632587 + i,
-                           Address = "Chennai" + i,
-                           CartTypeId = "77777" + i,
-                           Password = "!Morning1" + i,
-                       });
-                    await databaseContext.SaveChangesAsync();
-                }
-            }
-            return databaseContext;
-        }
+       
         [Fact]
         public async Task AdminLogin_Test()
         {
             //Arrange
-            var dbContext = await GetDatabaseContext();
+            var inMemory = new InMemoryDbContext();
+            var dbContext = await inMemory.GetDatabaseContext();
             var accountController = new AccountController(dbContext, _configuration);
             Admin admin = new Admin()
             {
-                AdminID = 10,
+                AdminID = 12,
                 AdminName = "Admin1",
                 EmailID = "admin1@gmail.com",
                 Password = "!Morning11"
@@ -80,7 +43,8 @@ namespace GroceryAPI.Tests.Controller
         public async Task Register_Test()
         {
             //Arrange
-            var dbContext = await GetDatabaseContext();
+            var inMemory = new InMemoryDbContext();
+            var dbContext = await inMemory.GetDatabaseContext();
             var accountController = new AccountController(dbContext, _configuration);
             Customer customer = new Customer()
                         {
@@ -103,11 +67,12 @@ namespace GroceryAPI.Tests.Controller
             dbContext.customer.Should().HaveCount(5);
         }
 
-        //[Fact]
+        [Fact]
         public async Task CustomerLogin_Test()
         {
             //Arrange
-            var dbContext = await GetDatabaseContext();
+            var inMemory = new InMemoryDbContext();
+            var dbContext = await inMemory.GetDatabaseContext();
             var accountController = new AccountController(dbContext, _configuration);
             Customer customer = new Customer()
             {
@@ -132,7 +97,7 @@ namespace GroceryAPI.Tests.Controller
 
 
             //Act
-            var register = await accountController.Register(customer);
+            await accountController.Register(customer);
             var result = await accountController.CustomerLogin(customer1);
 
             //Assert
@@ -146,7 +111,8 @@ namespace GroceryAPI.Tests.Controller
         public async Task GetAllCustomer_Test()
         {
             //Arrange
-            var dbContext = await GetDatabaseContext();
+            var inMemory = new InMemoryDbContext();
+            var dbContext = await inMemory.GetDatabaseContext();
             var accountController = new AccountController(dbContext, _configuration);
 
             //Act
