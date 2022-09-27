@@ -18,7 +18,6 @@ namespace GroceryAPI.Controllers
             _context = context;
         }
 
-
         [HttpPost]
         [Route("Payment")]
         public async Task<ActionResult<Payment>> Payment(Payment payment)
@@ -43,12 +42,10 @@ namespace GroceryAPI.Controllers
         [Route("UpdateTypeId")]
         public async Task<ActionResult<Customer>> UpdateTypeId(Customer c)
         {
-
             var update = await _context.customer.FindAsync(c.CustomerID);
             update.CartTypeId = null;
             await _context.SaveChangesAsync();
             return update;
-
         }
 
         [HttpGet]

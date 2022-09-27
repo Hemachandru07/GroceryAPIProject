@@ -59,7 +59,7 @@ namespace GroceryAPI.Controllers
                     "Error creating new employee record");
             }
         }
-
+        
         [HttpPost]
         [Route("Login")]
         public async Task<ActionResult<JWTToken>> CustomerLogin(Customer customer)
