@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GroceryAPI.Controllers
 {
-    //[Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class GroceryController : ControllerBase
@@ -19,11 +19,13 @@ namespace GroceryAPI.Controllers
             this.db = db;
         }
 
+        //[Authorize]
         [HttpGet]
         public async Task<ActionResult<List<Grocery>>> GetAllGrocery()
         {
             try
             {
+                
                 return await db.grocery.ToListAsync();
             }
             catch (Exception)
@@ -77,6 +79,7 @@ namespace GroceryAPI.Controllers
         {
             try
             {
+                Thread.Sleep(10000);
                 db.grocery.Update(grocery);
                 await db.SaveChangesAsync();
                 return grocery;
